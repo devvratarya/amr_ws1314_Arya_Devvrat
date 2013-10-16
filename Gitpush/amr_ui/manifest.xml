@@ -1,0 +1,26 @@
+<package>
+  <description brief="amr_ui">
+
+     amr_ui
+
+     requires pyside, pyside.qtdeclarative
+
+  </description>
+  <author>Sergey Alexandrov</author>
+  <license>BSD</license>
+
+  <depend package="rospy"/>
+  <depend package="actionlib"/>
+  <depend package="tf"/>
+  <depend package="sensor_msgs"/>
+  <depend package="std_msgs"/>
+  <depend package="geometry_msgs"/>
+
+  <depend package="amr_msgs"/>
+  <depend package="amr_srvs"/>
+
+  <rosdep name="python-pyside"/>
+
+</package>
+
+

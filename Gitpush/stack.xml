@@ -1,0 +1,7 @@
+<stack>
+  <description brief="Autonomous Mobile Robots course stack">
+  </description>
+  <author>Maintained by Sergey Alexandrov</author>
+  <license>BSD</license>
+  <depend stack="ros"/>
+</stack>
