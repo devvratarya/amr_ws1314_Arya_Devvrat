@@ -24,7 +24,28 @@ void wheelSpeedCallback(const amr_msgs::WheelSpeeds::ConstPtr& msg)
   //==================== YOUR CODE HERE ====================
   // Instructions: compute linear and angular components and
   //               fill in the twist message.
+  //
+  //As you have already learned, our target robotic platform is omni-directional and is controlled by
+  //sending geometry_msgs/Twist messages to the cmd_vel topic. These messages comprise both lin-
+  //ear and angular components of the desired robot’s velocity. In the Braitenberg vehicles, however,
+  //differential-drive control is assumed.
+  //Therefore your first task is to implement the
+  //differential_drive_emulator node. It will listen to the cmd_vel_diff topic, where messages of
+  //the type mr_msgs/WheelSpeeds will be published. These messages convey the speeds of two wheels.
+  //Upon reception of such a message the node should calculate and publish a velocity command that
+  //will make the robot move as a differential- drive platform would have moved if its wheels were
+  //spinning with the given speeds.
 
+        twist.linear.x = 0.0;
+        float lin_vel;
+        float angular_vel;
+        lin_vel = ((msg->speeds[0] + msg->speeds[1])*wheel_diameter/4);
+        angular_vel = ((msg->speeds[1] - msg->speeds[0])*wheel_diameter/(distance_between_wheels*2));
+        
+        twist.linear.x = lin_vel;
+        twist.angular.z = angular_vel;
+        
+        velocity_publisher.publish(twist);
 
   //========================================================
 
