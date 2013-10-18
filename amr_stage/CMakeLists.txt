@@ -34,10 +34,10 @@ add_definitions(-Wno-deprecated)
 
 #...: stage
 find_path(STAGE_INCLUDE_DIR stage.hh
-  /usr/local/include/Stage-4.1
+  /opt/stage/include/Stage-4.1
 )
 find_library(STAGE_LIBRARY stage
-  /usr/local/lib
+  /opt/stage/lib
 )
 include_directories(${STAGE_INCLUDE_DIR})
 
