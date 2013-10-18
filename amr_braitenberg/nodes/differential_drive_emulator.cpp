@@ -1,3 +1,7 @@
+//Description : Differential drive emulator file for vehicle delection and factor settings
+//Modifier : Devvrat Arya
+//Change Descriptio : Modified wheelSpeedCallback funcion for linear and angular speed calculations
+//Modification Date : October 18, 2013
 #include <ros/ros.h>
 #include <ros/console.h>
 #include <geometry_msgs/Twist.h>
@@ -37,10 +41,13 @@ void wheelSpeedCallback(const amr_msgs::WheelSpeeds::ConstPtr& msg)
   //spinning with the given speeds.
 
         twist.linear.x = 0.0;
+        twist.angular.x = 0.0;
         float lin_vel;
         float angular_vel;
-        lin_vel = ((msg->speeds[0] + msg->speeds[1])*wheel_diameter/4);
-        angular_vel = ((msg->speeds[1] - msg->speeds[0])*wheel_diameter/(distance_between_wheels*2));
+
+        //the value we get is angular velocity of the wheels. So we need to multiply it by radius as V = rW
+        lin_vel = ((msg->speeds[0] + msg->speeds[1])/2)*(wheel_diameter/2);
+        angular_vel = ((msg->speeds[1] - msg->speeds[0])/distance_between_wheels)*(wheel_diameter/2);
         
         twist.linear.x = lin_vel;
         twist.angular.z = angular_vel;
