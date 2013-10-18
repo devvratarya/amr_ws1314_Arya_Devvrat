@@ -1,3 +1,9 @@
+//Description : Braitenberg  file for reading sonar inputs and new vehicle object creation on Vehicle type change
+//Modifier : Devvrat Arya
+//Change Description : Modified reconfigureCallback funcion for new vehicletype object creation
+//                    Modified sonarCallback function to call computeWheelSpeeds function for speed calculatiosn of different vehicle
+//Modification Date : October 18, 2013
+
 #include <ros/ros.h>
 #include <ros/console.h>
 #include <dynamic_reconfigure/server.h>
@@ -8,6 +14,9 @@
 #include <amr_srvs/SwitchRanger.h>
 #include <amr_braitenberg/BraitenbergVehicleConfig.h>
 #include "braitenberg_vehicle.h"
+#include <iostream>
+
+using namespace std;
 
 ros::Subscriber sonar_subscriber;
 ros::Publisher wheel_speeds_publisher;
@@ -24,7 +33,26 @@ void reconfigureCallback(amr_braitenberg::BraitenbergVehicleConfig &config, uint
   // Hint: to create an instance of smart pointer use the
   //       following construction:
   //       vehicle = BraitenbergVehicle::UPtr(new BraitenbergVehicle(...))
-
+  //vehicle = BraitenbergVehicle::UPtr(new BraitenbergVehicle(config.type, config.factor1, config.factor2));
+  //initiating different kind of vehicle as per the selection from the configuration window
+    //type casting to Braitenberg Type(enum)
+    BraitenbergVehicle::Type Veh_Type = (BraitenbergVehicle::Type)config.type;
+    ROS_INFO("Selected Braitenberg Vehicle Type : %i",Veh_Type);
+    vehicle = BraitenbergVehicle::UPtr(new BraitenbergVehicle(Veh_Type,config.factor1,config.factor2));      
+    /*if(config.type == 0){
+      ROS_INFO("Selected Braitenberg Vehicle Type : A");
+      vehicle = BraitenbergVehicle::UPtr(new BraitenbergVehicle(Veh_Type,config.factor1,config.factor2));      
+      //vehicle = BraitenbergVehicle::UPtr(new BraitenbergVehicle(BraitenbergVehicle::Type::TYPE_A,config.factor1,config.factor2));      
+    }
+    else if(config.type == 1){
+      ROS_INFO("Selected Braitenberg Vehicle Type : B");
+      vehicle = BraitenbergVehicle::UPtr(new BraitenbergVehicle(Veh_Type,config.factor1,config.factor2));
+    }  
+    else if(config.type == 2){
+      ROS_INFO("Selected Braitenberg Vehicle Type : C");
+      vehicle = BraitenbergVehicle::UPtr(new BraitenbergVehicle(Veh_Type,config.factor1, config.factor2));
+    }
+    else {}*/
 
   // =======================================================
 
@@ -44,6 +72,13 @@ void sonarCallback(const amr_msgs::Ranges::ConstPtr& msg)
   //
   // Hint: use vehicle->computeWheelSpeeds(...) function.
 
+  //initializing the message speed array for memory allocation
+  m.speeds={0.0,0.0};
+  
+  //fucntion call to src::braitenberg_vehicle file for wheel speed calculation according
+  //to sonar readings from sonar_braitenberg topic
+  vehicle->computeWheelSpeeds(msg->ranges[0].range, msg->ranges[1].range, m.speeds[0], m.speeds[1]);
+  
 
   // =======================================================
 
